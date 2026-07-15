@@ -8,6 +8,8 @@
 [![Kubernetes](https://img.shields.io/badge/EKS-GPU%20serving-326CE5)](#)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](#)
 
+> **Portfolio** · [AI-infrastructure solutions-engineering hub](https://github.com/daetan999/technical_resume) · [value-engineering playbook — TCO / ROI](https://github.com/daetan999/technical_resume/blob/main/docs/value-engineering.md)
+
 ---
 
 ## Executive Summary
@@ -40,7 +42,7 @@ MERIDIAN is a production MLOps platform that replaces manual heuristics with rea
 ```mermaid
 flowchart TB
     subgraph Sources
-        PMS[Hospitality PMS<br/>OHIP-class API · REST/gRPC]
+        PMS[Hospitality PMS<br/>REST / gRPC API]
         IOT[Building IoT / BMS<br/>BACnet telemetry · edge FFT]
         EXT[External Signals<br/>weather · competitor rates · events]
     end
@@ -104,6 +106,27 @@ flowchart LR
 ### Technical-to-Financial Transmission
 
 ![Five transmission paths mapping model metrics to financial outcomes worth more than $8.3M annually](docs/assets/value-transmission.svg)
+
+---
+
+## GPU Serving Economics — The TCO Story
+
+The serving layer is where model architecture becomes a cloud bill. Consolidating 100+ single-tenant CPU pods (idle ~95% of the time) onto a shared, dynamically batched Triton / EKS GPU cluster is the platform's clearest FinOps win:
+
+![GPU FinOps serving economics — a single-tenant CPU fleet consolidated onto a shared, dynamically batched GPU cluster cuts hosting cost 58% while holding a sub-150ms p99 SLA](docs/assets/gpu-finops-tco.svg)
+
+| Lever | Before — single-tenant CPU | After — shared batched GPU |
+|---|---|---|
+| Deployment | 1 CPU instance per property model | 100+ models on one T4 cluster |
+| Compute utilization | ~5% (idle, bursty traffic) | **80%+** (dynamic batching) |
+| Scaling cost curve | linear with property count | sub-linear — decoupled from tenant count |
+| Peak headroom | over-provisioned for peak | absorbs **10×** volume spikes |
+| p99 inference latency | n/a | **< 150 ms** held under load |
+| **Hosting cost** | baseline | **−58% (≈ −$240K/yr)** |
+
+Dynamic batching buffers bursty, low-QPS requests (≤ 10 ms) into dense GPU work, so **unit cost per inference falls while throughput headroom rises** — the FinOps win and the SLA win are the same architectural move. Multi-model concurrency loads and unloads property-specific models in shared GPU memory, which is what decouples property scaling from linear infrastructure cost.
+
+Serving configuration: [`serving/`](serving/) — Triton dynamic-batching config and EKS deployment manifest. The value-based selling case built on these economics lives in the [value-engineering playbook](https://github.com/daetan999/technical_resume/blob/main/docs/value-engineering.md).
 
 ---
 

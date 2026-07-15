@@ -6,7 +6,7 @@
 
 The predictive layer depends entirely on data freshness, quality, and consistency. MERIDIAN ingests heterogeneous, high-velocity streams from global properties and centralizes them in a dual-layer feature store.
 
-- **Reservations & rates** — pulled in real time from the property-management system's integration platform (Oracle OHIP-class API) over REST/gRPC.
+- **Reservations & rates** — pulled in real time from the property-management system's integration platform over REST/gRPC.
 - **Building telemetry** — Building Management Systems transmit continuous utility consumption and equipment vibration over **BACnet**; edge gateway controllers pre-process signals (including FFT spectral features via NumPy) and push to **Apache Kafka**, partitioned by property for ordered, replayable consumption.
 - **Batch context** — **Apache Airflow** schedules daily feature ETLs, localized weather refreshes (Cooling/Heating Degree Days against an 18 °C base), competitor-rate snapshots, and training workflows. Heavy window aggregations run as **Spark SQL** window functions over 90-day partitioned tables.
 

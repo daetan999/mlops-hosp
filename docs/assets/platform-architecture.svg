@@ -8,7 +8,7 @@
 <text x="62" y="114" font-size="16" font-weight="700" fill="#16232e">Hospitality PMS</text>
 <text x="62" y="134" font-size="12.5" fill="#5c6b60">Property Management System integration</text>
 <text x="62" y="165" font-size="13" fill="#33413a">Real-time reservations, rates &amp; folio events</text>
-<text x="62" y="186" font-size="13" fill="#33413a">Oracle OHIP-class API &#183; REST / gRPC</text>
+<text x="62" y="186" font-size="13" fill="#33413a">Hospitality PMS API &#183; REST / gRPC</text>
 <rect x="60" y="200" width="318" height="24" rx="7" fill="#eef2e4"/>
 <text x="70" y="217" font-size="11.5" fill="#2e5d43" font-family="IBM Plex Mono, ui-monospace, Menlo, monospace">reservations &#183; rates &#183; occupancy</text>
 <rect x="514" y="84" width="452" height="150" rx="14" fill="#ffffff" stroke="#d8dfcd"/>
