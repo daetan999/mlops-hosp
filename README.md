@@ -126,7 +126,7 @@ The serving layer is where model architecture becomes a cloud bill. Consolidatin
 
 Dynamic batching buffers bursty, low-QPS requests (≤ 10 ms) into dense GPU work, so **unit cost per inference falls while throughput headroom rises** — the FinOps win and the SLA win are the same architectural move. Multi-model concurrency loads and unloads property-specific models in shared GPU memory, which is what decouples property scaling from linear infrastructure cost.
 
-Serving configuration: [`serving/`](serving/) — Triton dynamic-batching config and EKS deployment manifest. The value-based selling case built on these economics lives in the [value-engineering playbook](https://github.com/daetan999/technical_resume/blob/main/docs/value-engineering.md).
+Serving configuration: [`serving/`](serving/) — Triton dynamic-batching config and EKS deployment manifest. The value-based selling case built on these economics lives in the [value-engineering playbook](https://github.com/daetan999/technical_resume/blob/main/docs/value-engineering.md), and **[`docs/poc-playbook.md`](docs/poc-playbook.md)** shows how a sales engineer proves the −58% on a customer's own cluster in a two-week, falsifiable PoC.
 
 ---
 
