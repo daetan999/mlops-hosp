@@ -77,4 +77,4 @@ The measured deltas feed straight into the portfolio's value-engineering artifac
 - **[TCO worked example](https://github.com/daetan999/technical_resume/blob/main/docs/tco-worked-example.md)** — a fictional prospect taken end-to-end, with the cost waterfall.
 
 The serving economics that make this PoC land are documented in the
-[README's GPU Serving Economics section](../README.md#gpu-serving-economics--the-tco-story).
+[README's GPU Serving Economics section](../README.md#gpu-serving-economics).
