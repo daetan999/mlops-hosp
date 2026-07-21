@@ -1,18 +1,29 @@
-# MERIDIAN — Enterprise MLOps Platform Blueprint
+# Enterprise MLOps Platform — MERIDIAN Reference Blueprint
 
-[![Python](https://img.shields.io/badge/python-3.11%2B-blue)](#)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-EE4C2C)](#)
-[![MLflow](https://img.shields.io/badge/MLflow-registry-0194E2)](#)
-[![Triton](https://img.shields.io/badge/Triton-inference-76B900)](#)
-[![Kubernetes](https://img.shields.io/badge/EKS-GPU%20serving-326CE5)](#)
-
-> Part of the [technical project portfolio](https://github.com/daetan999/technical_resume). Supporting material: [value-engineering playbook](https://github.com/daetan999/technical_resume/blob/main/docs/value-engineering.md).
+[Architecture](docs/architecture.md) · [Model portfolio](docs/model-portfolio.md) · [Business-impact assumptions](docs/business-impact.md) · [GPU serving PoC](docs/poc-playbook.md)
 
 ## Overview
 
 MERIDIAN is a sanitized architecture blueprint for operating multiple machine-learning workloads on a shared data, feature, training, serving, and monitoring platform.
 
 The project covers eight model families across demand forecasting, constrained reinforcement-learning pricing, anomaly detection, predictive maintenance, asset clustering, feasibility analysis, and NLP ticket routing. The public repository retains representative interfaces, configuration shapes, model skeletons, deployment manifests, diagrams, and operational controls while excluding proprietary logic and production data.
+
+## Portfolio Role
+
+This is the technical-foundation layer of the [Enterprise AI Infrastructure Portfolio](https://github.com/daetan999/technical_resume). It demonstrates how workload behavior, feature contracts, model governance, GPU serving, reliability controls, and unit economics inform credible infrastructure discovery before commercial sizing begins.
+
+## Published Artifact Status
+
+This repository is a **sanitized reference blueprint**, not a deployable copy of a production platform.
+
+| Available here | Deliberately excluded |
+|---|---|
+| Representative model and feature contracts | Proprietary transformations and training data |
+| Airflow DAG and drift-response shapes | Live orchestration connections and credentials |
+| Triton and Kubernetes serving configuration | Registry images, clusters, and runtime endpoints |
+| Architecture, controls, and PoC acceptance criteria | A production-ready environment or end-to-end demo |
+
+Claims below describe the documented architecture and labelled modeled or sanitized outcomes. They do not imply that the public tree can reproduce a private deployment.
 
 ## Public-Portfolio Boundary
 
@@ -48,10 +59,10 @@ The platform is organized around a common operating path:
 ![Continuous MLOps lifecycle](docs/assets/mlops-lifecycle.svg)
 
 - Unit and integration checks precede registry submission.
-- Registry promotion separates staging and production-ready artifacts.
-- EKS rollouts use staged deployment rather than immediate fleet replacement.
-- Drift tiers distinguish warnings, automated retraining, and halt-and-page events.
-- Challengers re-enter the same evaluation gates before promotion.
+- The design separates staging and production-ready registry artifacts.
+- The rollout pattern stages changes rather than replacing the fleet immediately.
+- The drift policy distinguishes warnings, automated retraining, and halt-and-page events.
+- Challenger models re-enter the same evaluation gates before promotion.
 
 ## GPU Serving Economics
 
@@ -111,6 +122,35 @@ monitoring/            Drift thresholds and monitor service structure
 - [`docs/business-impact.md`](docs/business-impact.md) — assumptions linking model metrics to business outcomes
 - [`docs/poc-playbook.md`](docs/poc-playbook.md) — measurable GPU-serving evaluation plan
 
+## Repository Verification
+
+The public artifact can be checked without infrastructure credentials:
+
+```bash
+python -m compileall feature_store models monitoring pipelines
+python - <<'PY'
+from pathlib import Path
+import xml.etree.ElementTree as ET
+
+for diagram in Path("docs/assets").glob("*.svg"):
+    ET.parse(diagram)
+print("Python syntax and SVG assets verified")
+PY
+```
+
+These checks validate the published source and diagrams. They do not stand in for integration tests against Feast, Airflow, MLflow, Kubernetes, Triton, or a cloud account.
+
+## Limitations
+
+- Representative methods marked as blueprint stubs do not execute proprietary integrations.
+- The serving-economics figures are labelled modeled or sanitized and require validation on a buyer's workload.
+- Hardware choices and thresholds are illustrative, not a current vendor recommendation.
+- A formal deployment still requires security review, platform-specific configuration, load testing, and operating ownership.
+
 ## License
 
 Released under the MIT License.
+
+---
+
+[Part of the Enterprise AI Infrastructure Portfolio](https://github.com/daetan999/technical_resume)

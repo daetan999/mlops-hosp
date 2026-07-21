@@ -2,6 +2,8 @@
 
 > Part of the [MERIDIAN blueprint](../README.md). All integration names are vendor-class descriptions; no client identifiers, endpoints, or production configuration appear in this document.
 
+> **Implementation boundary:** this document records the sanitized architecture and operating contract. The public repository includes representative configurations and interfaces, not the live services, connectors, datasets, credentials, or an end-to-end deployable environment.
+
 ## 1. Ingestion & Orchestration
 
 The predictive layer depends entirely on data freshness, quality, and consistency. MERIDIAN ingests heterogeneous, high-velocity streams from global properties and centralizes them in a dual-layer feature store.
@@ -29,7 +31,7 @@ Over **70% of engineered features are shared across models**, which cut the time
 
 ## 4. High-Throughput GPU Serving
 
-Production networks serve from **Triton Inference Server** on EKS with NVIDIA T4 instances:
+The documented serving design uses **Triton Inference Server** on EKS with NVIDIA T4 instances:
 
 - **Dynamic batching** — Triton buffers requests up to 10 ms to form parallel batches, lifting GPU utilization from ~5% to 80%+.
 - **Multi-model concurrency** — 100+ property-specific models are loaded and evicted dynamically in shared GPU memory, decoupling portfolio growth from linear infrastructure cost.
@@ -37,7 +39,7 @@ Production networks serve from **Triton Inference Server** on EKS with NVIDIA T4
 
 ## 5. Drift Monitoring & Closed-Loop Retraining
 
-**Evidently AI** watches every production model:
+The monitoring design assigns **Evidently AI** checks to every governed model:
 
 | Drift type | Statistic | Threshold | Automated response |
 |---|---|---|---|
