@@ -1,4 +1,4 @@
-# Model Portfolio — Specifications by Product View
+# Model Portfolio: Specifications by Product View
 
 > Part of the [MERIDIAN blueprint](../README.md).
 
@@ -9,7 +9,7 @@
 - **Architecture:** PyTorch Forecasting TFT with multi-head self-attention (4 heads, d_model = 64), learning long-horizon seasonal structure while filtering daily noise.
 - **Quantile loss:** outputs predictive intervals (τ ∈ {0.1, 0.5, 0.9}) rather than point estimates, so revenue managers see best/median/worst-case bands.
 - **Covariates:** static attributes (brand tier, market segment), historical series (RevPAR, cancellation rates), and known-future variables (holidays, scheduled conventions).
-- **Result:** forecast MAPE compressed **12.5% → 4.5%**.
+- **Evaluation:** track MAPE and interval calibration by segment against an approved baseline; no result is bundled in the public blueprint.
 
 ### Dynamic Pricing — Deep Q-Network RL Agent
 
@@ -17,7 +17,7 @@
 - **State:** OTB inventory velocity, Days-To-Arrival, hourly competitor delta, TFT demand quantiles.
 - **Action:** continuous rate moves inside a bounded action space (−15% … +35% of rack rate) to avert competitor-pricing feedback spirals.
 - **Reward:** `R = Σ (Occupancy × ADR) − Penalty(overprice-vacancy)` over a rolling 30-day window.
-- **SLA:** decision returned in < 150 ms p99.
+- **Serving target:** define p99 latency from the consuming workflow and validate it under representative load.
 
 ## View 2 · Portfolio Management (Capital Allocation)
 
@@ -41,8 +41,8 @@ Forecasts thermodynamic load from weather and predicted occupancy; pre-cools hig
 
 - Survival models combined with random-forest classifiers over IoT vibration/current telemetry predict Mean Time To Failure for chillers and boilers.
 - **Hazard function:** `λ(t) = (β/η) · (t/η)^(β−1)` — β (shape) captures wear-out rate, η (scale) the characteristic life.
-- Flags a 90% failure probability inside a 14-day window, converting $120k emergency compressor replacements into $500 scheduled bearing swaps.
+- Produces a calibrated failure-risk window for maintenance review; alert precision, lead time, intervention cost, and downtime value require validation.
 
 ### Guest Feedback & Ticket Routing — Fine-Tuned BERT
 
-Parses reviews, booking comments, and internal logs; classifies sentiment/urgency and routes work orders straight to the on-duty engineer's device. MTTR fell **35 → 8 minutes**, driving +3% repeat bookings.
+Parses reviews, booking comments, and internal logs; classifies sentiment and urgency, then routes work orders to the appropriate response group. Evaluation should compare routing accuracy, escalation rate, and resolution-time distribution with the approved baseline.

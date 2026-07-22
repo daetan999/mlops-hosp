@@ -1,4 +1,4 @@
-# Data Pipeline & Serving Architecture
+# Data Pipeline and Serving Architecture
 
 > Part of the [MERIDIAN blueprint](../README.md). All integration names are vendor-class descriptions; no client identifiers, endpoints, or production configuration appear in this document.
 
@@ -18,10 +18,10 @@ Feast standardizes every engineered feature so the exact same definition serves 
 
 | Layer | Store | Purpose | SLA |
 |---|---|---|---|
-| Online | Redis Enterprise | Live inference feature retrieval | < 15 ms p99, < 5 min freshness |
+| Online | Redis Enterprise | Live inference feature retrieval | workload-defined latency and freshness targets |
 | Offline | Snowflake | Point-in-time-correct training sets, backfills | High-throughput batch |
 
-Over **70% of engineered features are shared across models**, which cut the time to ship a new predictive feature from months to days.
+Feature definitions are designed for reuse across models. Reuse rate and delivery-time change must be measured in the operating environment.
 
 ## 3. Training & Model Governance
 
@@ -33,9 +33,9 @@ Over **70% of engineered features are shared across models**, which cut the time
 
 The documented serving design uses **Triton Inference Server** on EKS with NVIDIA T4 instances:
 
-- **Dynamic batching** — Triton buffers requests up to 10 ms to form parallel batches, lifting GPU utilization from ~5% to 80%+.
-- **Multi-model concurrency** — 100+ property-specific models are loaded and evicted dynamically in shared GPU memory, decoupling portfolio growth from linear infrastructure cost.
-- **Latency budget** — the dynamic pricing endpoint holds **p99 < 150 ms** end-to-end; breaching it causes booking drop-offs on external distribution channels.
+- **Dynamic batching:** Triton can buffer requests to form parallel batches; the batching window and utilization effect require workload testing.
+- **Multi-model concurrency:** compatible models can share GPU memory; consolidation depends on memory fit, traffic, isolation, and load behavior.
+- **Latency budget:** the consuming workflow defines the p99 target, which must be tested across representative and peak load.
 
 ## 5. Drift Monitoring & Closed-Loop Retraining
 
@@ -47,9 +47,9 @@ The monitoring design assigns **Evidently AI** checks to every governed model:
 | Target drift | Population Stability Index | > 0.20 | Webhook fires Airflow `retrain_evaluate_promote` DAG |
 | Concept drift | Page-Hinkley test | > 3σ | Pause automated pricing, page data science on-call |
 
-The retraining DAG rebuilds the training set from the offline store, evaluates the challenger against the champion, and re-enters the same MLflow promotion gates — **no human in the hot path**. This automation reduced manual model-maintenance hours by 85%.
+The retraining DAG rebuilds the training set from the offline store, evaluates the challenger against the champion, and re-enters the same MLflow promotion gates. Promotion policy should retain the human approval required by the model's risk tier. Operating-effort change is a measurement, not a bundled result.
 
 ## 6. Failure-Mode Engineering
 
 - **Smart-meter null drops:** sensor packet loss produces null telemetry; pipelines reject null sequences and substitute rolling-median imputations so LSTM autoencoders never crash on malformed windows.
-- **Cold-start properties:** newly acquired or renovated properties lack history. Static attributes (location, tier, capacity) are t-SNE-clustered to find the most similar existing property group, and the TFT bootstraps from that cluster's pre-trained weights — transfer learning that collapsed new-property onboarding from 3 weeks to 1 hour.
+- **Cold-start properties:** newly acquired or renovated properties lack history. Static attributes can identify a comparable group, and a model can bootstrap from approved pretrained weights. Time-to-onboard and model quality require evaluation.

@@ -13,7 +13,7 @@ DEFAULT_ARGS = {
     "owner": "ml-platform",
     "retries": 2,
     "retry_delay": timedelta(minutes=10),
-    "sla": timedelta(hours=2),  # ingestion success SLO: >99.9% daily runs
+    "sla": timedelta(hours=2),  # Illustrative DAG SLA; set from source freshness needs.
 }
 
 
@@ -35,7 +35,7 @@ def build_climate_index_features(**ctx):
 def materialize_to_online_store(**ctx):
     """feast materialize-incremental: offline (Snowflake) -> online (Redis).
 
-    Freshness SLO: PMS state change visible in Redis within 5 minutes.
+    Freshness SLO is defined from the consuming workload and source cadence.
     """
     raise NotImplementedError("Blueprint stub — proprietary configuration omitted")
 

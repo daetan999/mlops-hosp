@@ -1,6 +1,0 @@
-interface:
-  display_name: "Mlops Hosp"
-  short_description: "Repo-specific patterns and workflows for mlops-hosp"
-  default_prompt: "Use the mlops-hosp repo skill to follow existing architecture, testing, and workflow conventions."
-policy:
-  allow_implicit_invocation: true

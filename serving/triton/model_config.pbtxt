@@ -1,6 +1,6 @@
 # Triton Inference Server model configuration (illustrative blueprint)
-# Dynamic batching + multi-model GPU concurrency: the two levers that lifted
-# GPU utilization from ~5% to 80%+ and cut hosting spend 58%.
+# Dynamic batching and multi-model GPU concurrency are candidate levers.
+# Utilization, latency, quality, reliability, and unit cost require testing.
 
 name: "pricing_agent_onnx"
 platform: "onnxruntime_onnx"
@@ -36,4 +36,4 @@ instance_group [
   }
 ]
 
-# p99 < 150 ms end-to-end budget on the pricing endpoint.
+# The end-to-end p99 target is defined by the consuming workflow.

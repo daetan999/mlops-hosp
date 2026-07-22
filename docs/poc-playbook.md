@@ -1,80 +1,71 @@
-# PoC Playbook — Proving the Serving-Economics Win on Your Cluster
+# PoC Playbook: Validate GPU Serving Economics
 
-> The serving-economics numbers in this repo (utilization ~5% → 80%+, hosting −58%,
-> 10× headroom at p99 < 150 ms) are the *outcome*. This playbook is how a sales
-> engineer **proves them on a customer's own cluster** — time-boxed, falsifiable, and
-> measured on the customer's traffic, not a vendor benchmark.
+The GPU-serving figures in this repository are not measured outcomes. This playbook defines how to test whether shared serving, dynamic batching, or multi-model concurrency improves utilization and unit cost without violating quality, latency, reliability, isolation, or operational requirements.
 
----
+## Frame the Hypothesis
 
-## The 60-second version
+Begin with a conditional statement:
 
-*"Your GPU bill is high because most of your fleet is idle — single-tenant pods sized
-for peak, running at single-digit utilization. We put your models behind one
-dynamically batched serving layer on a shared GPU pool. Batching packs your bursty
-requests into dense GPU work, so utilization climbs, the fleet shrinks, and cost per
-inference falls — while p99 stays under 150 ms because the batch window is capped at a
-few milliseconds. Same traffic, a fraction of the hardware, and 10× the headroom. Give
-me two weeks and your own traffic replay and I'll show it on your cluster, with a
-per-inference cost number your CFO can bank."*
+> If the model set, traffic profile, memory fit, and latency tolerance support shared serving, then batching or concurrency may improve fleet utilization and unit cost. A representative replay must establish the magnitude and trade-offs.
 
-## Why a PoC, and why this shape
+The hypothesis should be rejected or reshaped when the workload is already saturated, requires strict isolation, has an ultra-low latency floor, cannot share accelerator memory, or is dominated by CPU, storage, retrieval, or network cost.
 
-A PoC that can't fail can't sell. Three rules:
+## Agree the Success Criterion
 
-1. **Falsifiable** — a single pass/fail success criterion agreed *before* we start.
-2. **Customer's inputs** — their models, their traffic replay, their instance types.
-   The resulting number is theirs to defend internally, not mine to assert.
-3. **Time-boxed** — two weeks. If it needs a quarter, it isn't a PoC, it's a migration.
+Set thresholds only after capturing the baseline. A complete criterion names:
 
-## The success criterion (agreed up front)
+- representative model set and traffic replay;
+- baseline and proposed serving configurations;
+- output-quality or parity requirement;
+- p50, p95, and p99 latency thresholds;
+- target load and saturation method;
+- minimum observation and soak period;
+- reliability, recovery, security, and isolation requirements;
+- cost per 1,000 inferences and its price source;
+- pass, fail, and stop conditions.
 
-> On the customer's own traffic replay, serve their production model set on a shared,
-> dynamically batched GPU pool at **p99 < 150 ms** while sustaining **10× current peak
-> QPS** over a **72-hour soak**, at a **per-1K-inference cost ≤ 50% of today's**.
+No value from the reference diagrams should be copied into a customer criterion without evidence.
 
-Every threshold is measured. If one misses, we report it and diagnose — the PoC has
-done its job either way.
-
-## The two-week plan
+## Two-Week Evaluation Shape
 
 | Phase | Days | Activity | Exit gate |
-|---|---|---|---|
-| **0 · Frame** | 1–2 | Capture baseline: current GPU count, utilization, per-inference cost, p99, traffic profile | Signed-off baseline + success criterion |
-| **1 · Stand up** | 3–5 | Deploy Triton (or equiv.) with dynamic batching + multi-model concurrency on a shared pool; load customer models | Models serving correctly, parity on outputs |
-| **2 · Load** | 6–9 | Replay real traffic at 1× then 10× peak; tune batch window / instance mix | p99 and throughput targets met at 10× |
-| **3 · Soak** | 10–12 | 72-hour sustained run; capture utilization, cost, latency histograms | Stability + cost target held over soak |
-| **4 · Business case** | 13–14 | Turn measured deltas into the TCO model and the CFO one-liner | Written business case + expansion path |
+|---|---:|---|---|
+| Frame | 1–2 | record fleet, utilization, unit cost, latency, traffic, model, and control baselines | approved baseline and test plan |
+| Stand up | 3–5 | deploy the candidate serving pattern and validate output parity | models serve correctly and controls are observable |
+| Load | 6–9 | replay representative traffic, increase load, and vary batching or concurrency | latency, quality, throughput, and saturation evidence captured |
+| Soak | 10–12 | run the agreed sustained test and exercise failure recovery | stability and recovery evidence captured |
+| Decision | 13–14 | compare results, sensitivity, and operating implications | advance, reshape, or stop recommendation |
 
-## What we measure (and put on one dashboard)
+The duration is an example planning envelope, not a promise. Data access, security review, model preparation, or environment constraints can change it.
 
-- **GPU utilization** — steady-state and under load, before vs. after.
-- **Cost per 1K inferences** — the number that survives scrutiny.
-- **p99 / p50 latency** — histograms, not averages, under 1× and 10× load.
-- **Throughput headroom** — max QPS before p99 breaches the SLA.
-- **Fleet size** — GPU count for equivalent served load.
+## Measurement Set
 
-## Failure modes I'll surface honestly
+| Area | Measures |
+|---|---|
+| Demand | request distribution, concurrency, tokens or payload size, peak pattern |
+| Performance | throughput, queueing, p50/p95/p99 latency, saturation point |
+| Accelerator | utilization distribution, memory use, batch size, model residency |
+| Quality | parity checks and workload-specific evaluation metrics |
+| Reliability | errors, restarts, recovery time, stability during soak |
+| Economics | fleet size, price source, cost per 1,000 inferences, supporting platform cost |
+| Controls | isolation, identity, audit, data handling, rollback, operational ownership |
 
-A credible SE names where the pitch *doesn't* apply:
+## Failure Modes to Surface
 
-- **Traffic isn't burstable / already saturated** — if the fleet is genuinely busy,
-  batching yields little; the win is smaller and I'll say so.
-- **Latency floor below the batch window** — ultra-low-latency paths (< 20 ms) may not
-  tolerate batching; those stay on a dedicated lane.
-- **Model mix too heavy for shared memory** — very large models limit concurrency; the
-  consolidation ratio drops.
-- **Non-GPU bottlenecks** — if the real cost is data egress or CPU pre/post-processing,
-  GPU consolidation won't move the bill, and the discovery should have caught it.
+- **Already-saturated fleet:** batching may add little benefit.
+- **Latency below the batching window:** dedicated serving may remain necessary.
+- **Model mix exceeds shared memory:** concurrency and consolidation may be limited.
+- **Non-GPU bottleneck:** retrieval, CPU processing, network, storage, or egress may dominate.
+- **Quality trade-off:** quantization or model changes may fail the approved evaluation set.
+- **Control mismatch:** isolation, residency, or recovery requirements may invalidate the pattern.
 
-Calling these out *before* the customer finds them is what earns the technical win.
+Reporting a failed threshold is a valid PoC outcome. It prevents an unsupported architecture or business case from progressing.
 
-## From PoC to signed business case
+## Decision Handoff
 
-The measured deltas feed straight into the portfolio's value-engineering artifacts:
+Pass the measured baseline, configuration versions, result distributions, price sources, exceptions, and sensitivity into the capacity and TCO reviews. Keep observed results separate from estimates and illustrative examples.
 
-- **[Value-engineering playbook](https://github.com/daetan999/technical_resume/blob/main/docs/value-engineering.md)** — the full discovery→TCO→close motion.
-- **[TCO worked example](https://github.com/daetan999/technical_resume/blob/main/docs/tco-worked-example.md)** — a fictional prospect taken end-to-end, with the cost waterfall.
+- [Value-engineering method](https://github.com/daetan999/technical_resume/blob/main/docs/value-engineering.md)
+- [TCO worked example](https://github.com/daetan999/technical_resume/blob/main/docs/tco-worked-example.md)
 
-The serving economics that make this PoC land are documented in the
-[README's GPU Serving Economics section](../README.md#gpu-serving-economics).
+[Back to GPU Serving Validation](../README.md#gpu-serving-validation)
