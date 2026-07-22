@@ -1,6 +1,6 @@
 """DQN dynamic-pricing agent skeleton (illustrative blueprint).
 
-Demonstrates the state/action/reward contract of the production agent.
+Demonstrates an illustrative state/action/reward contract.
 Network weights, training data, and the historical simulator are proprietary
 and omitted.
 """
@@ -19,7 +19,7 @@ N_ACTIONS = 51
 
 @dataclass
 class PricingState:
-    """State vector S — assembled from the Feast online store in <15 ms."""
+    """State vector S assembled from the Feast online-store contract."""
 
     otb_velocity: float          # on-the-book booking velocity vs capacity
     days_to_arrival: int         # DTA window
@@ -57,8 +57,7 @@ def reward(occupancy: torch.Tensor, adr: torch.Tensor, overprice_vacancy_penalty
 
 def select_action(q_net: QNetwork, state: torch.Tensor, epsilon: float = 0.0) -> int:
     """epsilon-greedy: exploration only during offline historical simulation;
-    production inference is pure argmax served via ONNX on Triton
-    (p99 < 150 ms SLA)."""
+    candidate serving uses pure argmax and requires workload validation."""
     if epsilon > 0 and torch.rand(1).item() < epsilon:
         return int(torch.randint(N_ACTIONS, (1,)).item())
     with torch.no_grad():

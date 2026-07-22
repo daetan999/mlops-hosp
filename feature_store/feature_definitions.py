@@ -32,7 +32,7 @@ f_demand_lag = FeatureView(
         Field(name="otb_velocity", dtype=Float32),  # first derivative of on-the-book bookings
     ],
     source=demand_lag_source,
-    online=True,  # Redis: <15 ms p99 retrieval SLA
+    online=True,  # Redis retrieval target is defined by the consuming workload.
 )
 
 f_climate_index = FeatureView(

@@ -55,12 +55,12 @@ spec:
     kind: Deployment
     name: triton-inference
   minReplicas: 2
-  maxReplicas: 8            # absorbs 10x reservation-volume spikes
+  maxReplicas: 8            # illustrative limit; validate against load and quota
   metrics:
     - type: Pods
       pods:
         metric:
-          name: triton_queue_duration_p99   # scale before the 150 ms SLO is threatened
+          name: triton_queue_duration_p99   # scale against the workload-defined SLO
         target:
           type: AverageValue
           averageValue: "50m"

@@ -1,4 +1,4 @@
-# Enterprise MLOps Platform — MERIDIAN Reference Blueprint
+# Enterprise MLOps Platform: MERIDIAN Reference Blueprint
 
 [Architecture](docs/architecture.md) · [Model portfolio](docs/model-portfolio.md) · [Business-impact assumptions](docs/business-impact.md) · [GPU serving PoC](docs/poc-playbook.md)
 
@@ -23,13 +23,13 @@ This repository is a **sanitized reference blueprint**, not a deployable copy of
 | Triton and Kubernetes serving configuration | Registry images, clusters, and runtime endpoints |
 | Architecture, controls, and PoC acceptance criteria | A production-ready environment or end-to-end demo |
 
-Claims below describe the documented architecture and labelled modeled or sanitized outcomes. They do not imply that the public tree can reproduce a private deployment.
+Claims below describe the documented architecture, example controls, and illustrative value hypotheses. They do not imply that the public tree can reproduce a private deployment or any performance outcome.
 
 ## Public-Portfolio Boundary
 
 - Client names, property identifiers, datasets, endpoints, credentials, and internal codenames are removed or replaced.
 - Code is illustrative where production implementation cannot be published.
-- Financial impact figures are aggregated or modeled and are labelled as such.
+- Business-impact examples are hypotheses that require a measured baseline and customer validation.
 - Architecture and control patterns are retained to show the design decisions behind the system.
 
 ## Platform Architecture
@@ -64,21 +64,21 @@ The platform is organized around a common operating path:
 - The drift policy distinguishes warnings, automated retraining, and halt-and-page events.
 - Challenger models re-enter the same evaluation gates before promotion.
 
-## GPU Serving Economics
+## GPU Serving Validation
 
-The serving design consolidates a linear single-tenant CPU pattern onto shared, dynamically batched GPU infrastructure.
+The serving design tests whether a dedicated serving pattern can benefit from shared, dynamically batched GPU infrastructure. The answer depends on model memory, traffic shape, latency tolerance, utilization, and non-GPU bottlenecks.
 
-![GPU serving economics](docs/assets/gpu-finops-tco.svg)
+![Illustrative GPU serving validation framework](docs/assets/gpu-finops-tco.svg)
 
-| Measure | Before | Shared GPU design |
+| Measure | Baseline to capture | Shared-serving hypothesis |
 |---|---|---|
-| Deployment pattern | One CPU instance per property model | 100+ model deployments on a shared T4 cluster |
-| Compute utilization | Approximately 5% | More than 80% in the modeled serving scenario |
-| Peak handling | Per-instance overprovisioning | Up to 10× traffic headroom in load testing assumptions |
-| Inference service level | Not standardized | p99 below 150 ms target |
-| Hosting economics | Baseline | Approximately 58% lower modeled hosting cost |
+| Deployment pattern | model placement, instance count, isolation needs | compatible models share an observable serving pool |
+| Compute utilization | steady-state and peak utilization | batching and concurrency may improve density |
+| Peak handling | traffic distribution and saturation point | headroom is measured before the latency target fails |
+| Inference service level | p50, p95, and p99 by load level | an agreed latency target is tested under replay |
+| Hosting economics | price source, fleet size, and unit cost | unit-cost change is calculated from measured results |
 
-The associated [`docs/poc-playbook.md`](docs/poc-playbook.md) defines how to test utilization, throughput, latency, reliability, and cost per inference against an agreed baseline.
+No improvement is assumed. The associated [`docs/poc-playbook.md`](docs/poc-playbook.md) defines how to test utilization, throughput, latency, reliability, and cost per inference against an agreed baseline.
 
 ## Model Portfolio
 
@@ -91,7 +91,7 @@ The associated [`docs/poc-playbook.md`](docs/poc-playbook.md) defines how to tes
 
 ![Technical-to-financial transmission](docs/assets/value-transmission.svg)
 
-The value-transmission model links technical measures such as forecast error, downtime, inference utilization, and response time to corresponding revenue, operating-cost, or capital-expenditure hypotheses. Detailed assumptions are documented in [`docs/business-impact.md`](docs/business-impact.md).
+The value-transmission model links technical measures such as forecast error, downtime, inference utilization, and response time to revenue, operating-cost, or capital-expenditure hypotheses. The evidence required to quantify each path is documented in [`docs/business-impact.md`](docs/business-impact.md).
 
 ## Reliability Controls
 
@@ -143,7 +143,7 @@ These checks validate the published source and diagrams. They do not stand in fo
 ## Limitations
 
 - Representative methods marked as blueprint stubs do not execute proprietary integrations.
-- The serving-economics figures are labelled modeled or sanitized and require validation on a buyer's workload.
+- Serving-economics outputs require a buyer baseline, representative traffic, benchmark evidence, and current pricing inputs.
 - Hardware choices and thresholds are illustrative, not a current vendor recommendation.
 - A formal deployment still requires security review, platform-specific configuration, load testing, and operating ownership.
 

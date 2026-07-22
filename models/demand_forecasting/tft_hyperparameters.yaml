@@ -19,6 +19,7 @@ training:
   artifact_format: onnx
   registry_gates: [integration_suite, champion_challenger_eval]
 
-result:
-  mape_before: 0.125
-  mape_after: 0.045
+evaluation:
+  primary_metric: mape
+  comparison: approved_baseline
+  bundled_result: false
