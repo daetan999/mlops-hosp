@@ -104,6 +104,12 @@ The value-transmission model links technical measures such as forecast error, do
 | Telemetry gaps | Input validation and rolling-median substitution |
 | Serving acceptance | Explicit p99 latency, utilization, throughput, and cost criteria |
 
+## Design Decisions
+
+- **Use shared feature definitions across training and serving.** The platform reduces skew by keeping online and point-in-time offline access under one contract. Shared definitions increase governance overhead; workload-specific features should diverge only when measured requirements demand it.
+- **Treat shared GPU serving as a hypothesis.** Batching and multi-model concurrency may improve density, but isolation, memory fit, and latency can make dedicated pools safer. Representative traffic and failure testing decide the placement.
+- **Separate drift warning, retraining, and halt responses.** Different failure classes need different operational actions. More policy tiers require ownership and telemetry; incident evidence or model-risk review can change thresholds and escalation rules.
+
 ## Repository Map
 
 ```text
