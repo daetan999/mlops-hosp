@@ -1,15 +1,15 @@
 # Enterprise MLOps Platform: MERIDIAN Reference Blueprint
 
-[![CI](https://github.com/daetan999/mlops-hosp/actions/workflows/ci.yml/badge.svg)](https://github.com/daetan999/mlops-hosp/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-2E5D43?style=flat-square&labelColor=16232E)](LICENSE)
-[![Orchestration: Airflow](https://img.shields.io/badge/orchestration-airflow-1B2733?style=flat-square&labelColor=16232E)](pipelines/airflow/dags)
-[![Serving: Triton](https://img.shields.io/badge/serving-triton-1B2733?style=flat-square&labelColor=16232E)](serving/triton/model_config.pbtxt)
-[![Deploy: Kubernetes](https://img.shields.io/badge/deploy-kubernetes-1B2733?style=flat-square&labelColor=16232E)](serving/k8s/triton-inference-deployment.yaml)
-[![Monitoring: drift thresholds](https://img.shields.io/badge/monitoring-drift%20thresholds-1B2733?style=flat-square&labelColor=16232E)](monitoring/drift_thresholds.yaml)
-[![Model families: 8](https://img.shields.io/badge/model%20families-8-1B2733?style=flat-square&labelColor=16232E)](docs/model-portfolio.md)
-[![Artifact: sanitized blueprint](https://img.shields.io/badge/artifact-sanitized%20blueprint-5C6B60?style=flat-square&labelColor=16232E)](#published-artifact-status)
-[![Data: excluded](https://img.shields.io/badge/data-excluded-5C6B60?style=flat-square&labelColor=16232E)](#public-portfolio-boundary)
-[![Portfolio](https://img.shields.io/badge/portfolio-technical__resume-5C6B60?style=flat-square&labelColor=16232E)](https://github.com/daetan999/technical_resume)
+[![CI](https://github.com/daetan999/mlops-hosp/actions/workflows/ci.yml/badge.svg?style=flat-square)](https://github.com/daetan999/mlops-hosp/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-B5480F?style=flat-square&labelColor=17100A)](LICENSE)
+[![Orchestration: Airflow](https://img.shields.io/badge/orchestration-airflow-3A2A1C?style=flat-square&labelColor=17100A)](pipelines/airflow/dags)
+[![Serving: Triton](https://img.shields.io/badge/serving-triton-3A2A1C?style=flat-square&labelColor=17100A)](serving/triton/model_config.pbtxt)
+[![Deploy: Kubernetes](https://img.shields.io/badge/deploy-kubernetes-3A2A1C?style=flat-square&labelColor=17100A)](serving/k8s/triton-inference-deployment.yaml)
+[![Monitoring: drift thresholds](https://img.shields.io/badge/monitoring-drift%20thresholds-3A2A1C?style=flat-square&labelColor=17100A)](monitoring/drift_thresholds.yaml)
+[![Model families: 8](https://img.shields.io/badge/model%20families-8-3A2A1C?style=flat-square&labelColor=17100A)](docs/model-portfolio.md)
+[![Artifact: sanitized blueprint](https://img.shields.io/badge/artifact-sanitized%20blueprint-7A6550?style=flat-square&labelColor=17100A)](#published-artifact-status)
+[![Data: excluded](https://img.shields.io/badge/data-excluded-7A6550?style=flat-square&labelColor=17100A)](#public-portfolio-boundary)
+[![Portfolio](https://img.shields.io/badge/portfolio-technical__resume-7A6550?style=flat-square&labelColor=17100A)](https://github.com/daetan999/technical_resume)
 
 [Architecture](docs/architecture.md) · [Model portfolio](docs/model-portfolio.md) · [Business-impact assumptions](docs/business-impact.md) · [GPU serving PoC](docs/poc-playbook.md)
 
